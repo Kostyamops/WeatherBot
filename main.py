@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 import csv
 
 
-bot = telebot.TeleBot('7216659802:AAGWjZ-uc_hQuNM8vTBZrd9rVc54z0c9Z1g')
+bot = telebot.TeleBot('')
 with open("rootlist.txt") as file:
     whitelist = ([row.strip() for row in file])
 print(whitelist)
