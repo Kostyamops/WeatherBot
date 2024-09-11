@@ -13,10 +13,10 @@ with open("token.txt") as file:
 file.close()
 
 with open("rootlist.txt") as file:
-    whitelist = ([row.strip() for row in file])
+    rootlist = ([row.strip() for row in file])
 file.close()
 
-print(whitelist)
+print(rootlist)
 
 def clouds_emoji(clouds_now):
     clouds_now = clouds_now.lower()
