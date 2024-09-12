@@ -7,7 +7,6 @@ import csv
 import math
 
 
-
 with open("token.txt") as file:
     bot = telebot.TeleBot(file.readline(), parse_mode='HTML')
 file.close()
