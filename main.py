@@ -51,6 +51,31 @@ def clouds_emoji(clouds_now):
         return("|")
 
 
+def replace_temp_symbols(temp):
+    temp_pack = []
+    for i in range(0, len(temp)):
+        new_temp = str(temp[i])
+        new_temp = new_temp.replace('<span class="t">', "")
+        new_temp = new_temp.replace('</span>', "")
+        new_temp = new_temp.replace('°', "")
+        new_temp = new_temp.replace('+', "")
+        new_temp = new_temp.replace('...', " ")
+        temp_pack.append(list(map(str, new_temp.split())))
+    return(temp_pack)
+
+
+def replace_clouds_symbols(clouds):
+    clouds_pack = []
+    for i in range(0, len(clouds)):
+        new_clouds = str(clouds[i])
+        new_clouds = new_clouds.replace('<div class="cl_title">', "")
+        new_clouds = new_clouds.replace('<br/>', "+")
+        new_clouds = new_clouds.replace('</div>', "")
+        new_clouds = new_clouds[0].upper() + new_clouds[1::]
+        clouds_pack.append(list(map(str, new_clouds.split("+"))))
+    return(clouds_pack)
+
+
 def weather_now():
     weather_pack = []
     url = "https://www.pogoda.com/saint-petersburg.htm"
@@ -97,14 +122,35 @@ def weather_now():
 
 
 def weather_3days():
-    url = "https://www.pogoda.com/saint-petersburg.htm"
+    weather_pack = []
+    url = "https://spb.nuipogoda.ru/погода-на-14-дней"
     r = requests.get(url)
-    #print(r.text)
     bs = BeautifulSoup(r.text, "lxml")
-    temp = bs.find_all("li", class_="grid-item dia d1 activo")
-    print(temp)
-    for temp in temp:
-        print(temp.get("max changeUnitT"))
+
+    ### ТЕМПЕРАТУРА
+    temp = bs.find_all("span", class_="t")
+    temp_2weeks = replace_temp_symbols(temp)
+    print(temp_2weeks)
+
+    ### ОБЛАЧНОСТЬ
+    clouds = bs.find_all("div", class_="cl_title")
+    clouds_2weeks = replace_clouds_symbols(clouds)
+    print(clouds_2weeks)
+
+    weather_pack_3days = []
+    weather_pack_3days.append("✨Завтра")
+    weather_pack_3days.append("<b>" + temp_2weeks[1][0] + "°C - " + temp_2weeks[1][1] + "°C</b>")
+    weather_pack_3days.append("<i>" + clouds_2weeks[1][0] + ", " + clouds_2weeks[1][1] + "</i>")
+    weather_pack_3days.append("")
+    weather_pack_3days.append("✨Послезавтра")
+    weather_pack_3days.append("<b>" + temp_2weeks[2][0] + "°C - " + temp_2weeks[2][1] + "°C</b>")
+    weather_pack_3days.append("<i>" + clouds_2weeks[2][0] + ", " + clouds_2weeks[2][1] + "</i>")
+    weather_pack_3days.append("")
+    weather_pack_3days.append("✨Через 2 дня")
+    weather_pack_3days.append("<b>" + temp_2weeks[3][0] + "°C - " + temp_2weeks[3][1] + "°C</b>")
+    weather_pack_3days.append("<i>" + clouds_2weeks[3][0] + ", " + clouds_2weeks[3][1] + "</i>")
+
+    return(weather_pack_3days)
 
 
 @bot.message_handler(commands=['start'])
@@ -117,6 +163,7 @@ def start(message):
                      text="Привет, {0.first_name} {0.last_name}!\nЯ - Лина, твой персональный метеоролог 😎".format(
                          message.from_user), reply_markup=markup)
 
+
 @bot.message_handler(content_types=['text'])
 def func(message):
     if (message.text == "⚡️ Погода сейчас"):
@@ -128,7 +175,14 @@ def func(message):
         print(text)
         bot.send_message(message.chat.id, text=text)
     elif (message.text == "🌈 Прогноз на 3 дня"):
-        bot.send_message(message.chat.id, text="Прогноз на 3 дня еще не готов😭, однако я над этим работаю не покладая лапок💪")
+        #bot.send_message(message.chat.id, text="Прогноз на 3 дня еще не готов😭, однако я над этим работаю не покладая лапок💪")
+        message_lines = weather_3days()
+        print(len(message_lines), message_lines)
+        text = ""
+        for i in range(0, len(message_lines)):
+            text = text + message_lines[i] + "\n"
+        print(text)
+        bot.send_message(message.chat.id, text=text)
     else:
         bot.send_message(message.chat.id, 'Я тупенькая я не понимаю тебя!')
 
