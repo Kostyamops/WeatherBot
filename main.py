@@ -11,11 +11,6 @@ with open("token.txt") as file:
     bot = telebot.TeleBot(file.readline(), parse_mode='HTML')
 file.close()
 
-with open("rootlist.txt") as file:
-    rootlist = ([row.strip() for row in file])
-file.close()
-
-print(rootlist)
 
 def clouds_emoji(clouds_now):
     clouds_now = clouds_now.lower()
