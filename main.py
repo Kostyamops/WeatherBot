@@ -94,24 +94,13 @@ def weather_now():
     temp_feeling = "<i>" + "По ощущениям " + str(int(round(float(temp_feeling)))) + "°C" + "</i>"
     weather_pack.append(str(temp_feeling))
     print(temp_feeling)
-
+    
     ### ОБЛАЧНОСТЬ
     clouds = bs.find_all("img", width="64")
     for clouds in clouds:
         clouds_now = (clouds.get("alt"))
     weather_pack[0] = weather_pack[0] + " " + clouds_emoji(clouds_now) + " " + str(clouds_now)
-    #weather_pack.append(str(clouds_now))
     print(clouds_now)
-
-    ### ВЕТЕР
-    # wind = bs.find("img", width="32")
-    # for wind in wind:
-    #     wind_now = (wind.get("alt"))
-    #     print(wind_now)
-    # wind = bs.find("span", class_="changeUnitW")
-    # for wind in wind:
-    #     wind_speed = (wind.get("data"))
-    #     print(wind_speed)
 
     return(weather_pack)
 
@@ -170,7 +159,6 @@ def func(message):
         print(text)
         bot.send_message(message.chat.id, text=text)
     elif (message.text == "🌈 Прогноз на 3 дня"):
-        #bot.send_message(message.chat.id, text="Прогноз на 3 дня еще не готов😭, однако я над этим работаю не покладая лапок💪")
         message_lines = weather_3days()
         print(len(message_lines), message_lines)
         text = ""
