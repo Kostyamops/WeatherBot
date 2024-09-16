@@ -6,7 +6,6 @@ import lxml
 import csv
 import math
 
-
 with open("token.txt") as file:
     bot = telebot.TeleBot(file.readline(), parse_mode='HTML')
 file.close()
@@ -15,35 +14,35 @@ file.close()
 def clouds_emoji(clouds_now):
     clouds_now = clouds_now.lower()
     if "дождь" in clouds_now:
-        return("🌧")
+        return ("🌧")
     elif "небольшой дождь" in clouds_now:
-        return("🌦")
+        return ("🌦")
     elif "пасмурно" in clouds_now:
         return ("☁️")
     elif "переменная облачность" in clouds_now:
-        return("🌥")
+        return ("🌥")
     elif "малооблачно" in clouds_now:
-        return("⛅️")
+        return ("⛅️")
     elif "облачно и ясно" in clouds_now:
-        return("🌤")
+        return ("🌤")
     elif "солнечно и ясно" in clouds_now:
-        return("☀️")
+        return ("☀️")
     elif "ясное небо" in clouds_now:
-        return("☀️")
+        return ("☀️")
     elif "снег" in clouds_now:
-        return("🌨")
+        return ("🌨")
     elif "мокрый снег" in clouds_now:
-        return("🌨")
+        return ("🌨")
     elif "грязь с пылью" in clouds_now:
-        return("🌫")
+        return ("🌫")
     elif "туман" in clouds_now:
-        return("🌫")
+        return ("🌫")
     elif "дымка" in clouds_now:
-        return("🌫")
+        return ("🌫")
     elif "гроза" in clouds_now:
-        return("⛈")
+        return ("⛈")
     else:
-        return("|")
+        return ("|")
 
 
 def replace_temp_symbols(temp):
@@ -56,7 +55,7 @@ def replace_temp_symbols(temp):
         new_temp = new_temp.replace('+', "")
         new_temp = new_temp.replace('...', " ")
         temp_pack.append(list(map(str, new_temp.split())))
-    return(temp_pack)
+    return (temp_pack)
 
 
 def replace_clouds_symbols(clouds):
@@ -68,7 +67,7 @@ def replace_clouds_symbols(clouds):
         new_clouds = new_clouds.replace('</div>', "")
         new_clouds = new_clouds[0].upper() + new_clouds[1::]
         clouds_pack.append(list(map(str, new_clouds.split("+"))))
-    return(clouds_pack)
+    return (clouds_pack)
 
 
 def weather_now():
@@ -81,7 +80,7 @@ def weather_now():
     temp = bs.find_all("span", class_="dato-temperatura changeUnitT")
     for temp in temp:
         temp_now = (temp.get("data"))
-    temp_now = str(temp_now).replace("|0|","")
+    temp_now = str(temp_now).replace("|0|", "")
     temp_now = "<b>" + str(int(round(float(temp_now)))) + "°C</b>"
     weather_pack.append(str(temp_now))
     print(temp_now)
@@ -94,7 +93,7 @@ def weather_now():
     temp_feeling = "<i>" + "По ощущениям " + str(int(round(float(temp_feeling)))) + "°C" + "</i>"
     weather_pack.append(str(temp_feeling))
     print(temp_feeling)
-    
+
     ### ОБЛАЧНОСТЬ
     clouds = bs.find_all("img", width="64")
     for clouds in clouds:
@@ -102,7 +101,7 @@ def weather_now():
     weather_pack[0] = weather_pack[0] + " " + clouds_emoji(clouds_now) + " " + str(clouds_now)
     print(clouds_now)
 
-    return(weather_pack)
+    return (weather_pack)
 
 
 def weather_3days():
@@ -134,7 +133,7 @@ def weather_3days():
     weather_pack_3days.append("<b>" + temp_2weeks[3][0] + "°C - " + temp_2weeks[3][1] + "°C</b>")
     weather_pack_3days.append("<i>" + clouds_2weeks[3][0] + ", " + clouds_2weeks[3][1] + "</i>")
 
-    return(weather_pack_3days)
+    return (weather_pack_3days)
 
 
 @bot.message_handler(commands=['start'])
@@ -142,7 +141,8 @@ def start(message):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     btn1 = types.KeyboardButton("⚡️ Погода сейчас")
     btn2 = types.KeyboardButton("🌈 Прогноз на 3 дня")
-    markup.add(btn1, btn2)
+    btn3 = types.KeyboardButton("ℹ️ Инфо")
+    markup.add(btn1, btn2, btn3)
     bot.send_message(message.chat.id,
                      text="Привет, {0.first_name} {0.last_name}!\nЯ - Лина, твой персональный метеоролог 😎".format(
                          message.from_user), reply_markup=markup)
@@ -154,7 +154,7 @@ def func(message):
         message_lines = weather_now()
         print(len(message_lines), message_lines)
         text = ""
-        for i in range(0,len(message_lines)):
+        for i in range(0, len(message_lines)):
             text = text + message_lines[i] + "\n"
         print(text)
         bot.send_message(message.chat.id, text=text)
@@ -166,6 +166,10 @@ def func(message):
             text = text + message_lines[i] + "\n"
         print(text)
         bot.send_message(message.chat.id, text=text)
+    elif (message.text == "ℹ️ Инфо"):
+        bot.send_message(message.chat.id,
+                         text="ℹ️ Данный бот разработан @kgritz в рамках выполения лабораторной работы в НИУ ИТМО. Бот использует метод парсинга сайтов для получения необходимой информации о погоде. Источниками такой информации являются сайты pogoda.com и spb.nuipogoda.ru. Все действия являются законными и выполняются в соответвии с правилами данных сайтов.".format(
+                             message.from_user))
     else:
         bot.send_message(message.chat.id, 'Я тупенькая я не понимаю тебя!')
 
