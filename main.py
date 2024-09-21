@@ -29,6 +29,8 @@ def clouds_emoji(clouds_now):
         return ("☀️")
     elif "ясное небо" in clouds_now:
         return ("☀️")
+    elif "солнечно" in clouds_now:
+        return ("☀️")
     elif "снег" in clouds_now:
         return ("🌨")
     elif "мокрый снег" in clouds_now:
