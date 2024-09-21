@@ -83,7 +83,7 @@ def weather_now():
     temp_now = str(temp_now).replace("|0|", "")
     temp_now = "<b>" + str(int(round(float(temp_now)))) + "°C</b>"
     weather_pack.append(str(temp_now))
-    print(temp_now)
+    #print(temp_now)
 
     ### ПО ОЩУЩЕНИЯМ
     temp = bs.find_all("span", class_="sensacion changeUnitT")
@@ -92,14 +92,14 @@ def weather_now():
     temp_feeling = str(temp_feeling).replace("|0|По ощущениям", "")
     temp_feeling = "<i>" + "По ощущениям " + str(int(round(float(temp_feeling)))) + "°C" + "</i>"
     weather_pack.append(str(temp_feeling))
-    print(temp_feeling)
+    #print(temp_feeling)
 
     ### ОБЛАЧНОСТЬ
     clouds = bs.find_all("img", width="64")
     for clouds in clouds:
         clouds_now = (clouds.get("alt"))
     weather_pack[0] = weather_pack[0] + " " + clouds_emoji(clouds_now) + " " + str(clouds_now)
-    print(clouds_now)
+    #print(clouds_now)
 
     return (weather_pack)
 
@@ -113,12 +113,12 @@ def weather_3days():
     ### ТЕМПЕРАТУРА
     temp = bs.find_all("span", class_="t")
     temp_2weeks = replace_temp_symbols(temp)
-    print(temp_2weeks)
+    #print(temp_2weeks)
 
     ### ОБЛАЧНОСТЬ
     clouds = bs.find_all("div", class_="cl_title")
     clouds_2weeks = replace_clouds_symbols(clouds)
-    print(clouds_2weeks)
+    #print(clouds_2weeks)
 
     weather_pack_3days = []
     weather_pack_3days.append("✨Завтра")
@@ -152,19 +152,19 @@ def start(message):
 def func(message):
     if (message.text == "⚡️ Погода сейчас"):
         message_lines = weather_now()
-        print(len(message_lines), message_lines)
+        #print(len(message_lines), message_lines)
         text = ""
         for i in range(0, len(message_lines)):
             text = text + message_lines[i] + "\n"
-        print(text)
+        #print(text)
         bot.send_message(message.chat.id, text=text)
     elif (message.text == "🌈 Прогноз на 3 дня"):
         message_lines = weather_3days()
-        print(len(message_lines), message_lines)
+        #print(len(message_lines), message_lines)
         text = ""
         for i in range(0, len(message_lines)):
             text = text + message_lines[i] + "\n"
-        print(text)
+        #print(text)
         bot.send_message(message.chat.id, text=text)
     elif (message.text == "ℹ️ Инфо"):
         bot.send_message(message.chat.id,
