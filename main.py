@@ -150,6 +150,7 @@ def start(message):
 
 @bot.message_handler(content_types=['text'])
 def func(message):
+    print("Запрос", message.from_user.username, "поступил в обработку...")
     if (message.text == "⚡️ Погода сейчас"):
         message_lines = weather_now()
         #print(len(message_lines), message_lines)
@@ -172,6 +173,6 @@ def func(message):
                              message.from_user))
     else:
         bot.send_message(message.chat.id, 'Я тупенькая я не понимаю тебя!')
-
+    print("Запрос", message.from_user.username, "обработан успешно.")
 
 bot.polling(none_stop=True)
